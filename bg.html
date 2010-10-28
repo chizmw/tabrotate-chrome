@@ -2,8 +2,11 @@
 Revolver - Tabs
 
 2010-01-30 - Initial working alpha version
+2010-10-26 - Work with multiple windows
+2010-10-27 - Don't change tabs if the browser isn't idle
 
 Created by Ben Hedrington
+Improved by Fred Emmott
 
 -->
 
@@ -43,7 +46,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 		go(windowId);
 	}
 });
-moverInteval = setInterval("moveTab()", timeDelay);	
+moverInteval = setInterval("moveTabIfIdle()", timeDelay);	
 
 function badgeTabs(windowId, text) {
 	chrome.tabs.getAllInWindow(windowId, function(tabs) {
@@ -77,6 +80,17 @@ function activateTab(tab) {
 	if (tabReload) {
 		chrome.tabs.update(tab.id, {url: tab.url});
 	}
+}
+
+// Call moveTab if the user isn't actually interacting with the browser
+function moveTabIfIdle() {
+  // 15 is the lowest allowable number of seconds for this call
+  // If you try lower, Chrome complains
+	chrome.idle.queryState(15, function(state) {
+    if(state == 'idle') {
+      moveTab();
+    }
+	});
 }
 
 // Switches to nex URL in manifest, re-requests feed if at end of manifest.
