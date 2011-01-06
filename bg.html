@@ -16,6 +16,7 @@ var activeWindows = new Array();
 var timeDelay = 10000;
 if (localStorage["seconds"]) { timeDelay = (localStorage["seconds"]*1000);}
 var tabReload = true;
+var autoStart = false;
 if (localStorage["reload"]) { 
 	if (localStorage["reload"] == 'true') {
 		tabReload = true;
@@ -47,6 +48,18 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 	}
 });
 moverInteval = setInterval("moveTabIfIdle()", timeDelay);	
+
+// start automatically if configured to do so
+if (localStorage["auto_start"]) {
+	if (localStorage["auto_start"] == 'true') {
+		autoStart = true;
+        chrome.windows.getCurrent(function(currentWindow) {
+            go(currentWindow.id);
+        });
+	} else {
+		autoStart = false;
+	}
+}
 
 function badgeTabs(windowId, text) {
 	chrome.tabs.getAllInWindow(windowId, function(tabs) {

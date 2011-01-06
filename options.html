@@ -13,6 +13,13 @@ function save_options() {
 		localStorage["reload"] = 'false';
 		bg.tabReload = false;
 	}
+	if (document.getElementById("auto_start").checked == true) {
+		localStorage["auto_start"] = 'true';
+		bg.autoStart = true;
+	} else {
+		localStorage["auto_start"] = 'false';
+		bg.autoStart = false;
+	}
   // Update status to let user know options were saved.
   var status = document.getElementById("status");
   status.innerHTML = "Options Saved.";
@@ -36,6 +43,15 @@ function restore_options() {
 	} else {
 		document.getElementById("reload").checked = true;
 	}
+	if (localStorage["auto_start"]) {
+		if (localStorage["auto_start"] == 'true') {
+			document.getElementById("auto_start").checked = true;
+		} else {
+			document.getElementById("auto_start").checked = false;
+		}
+	} else {
+		document.getElementById("auto_start").checked = false;
+	}
 }
 </script>
 <style type="text/css">
@@ -58,6 +74,7 @@ div#status {color:#ff0000;margin-top:5px;}
 <div id="settings">
 <p><label for="seconds">Seconds:</label> <input type="text" name="seconds" id="seconds" style="width:30px;"><span class="example">The number of seconds to show a tab before switching ex. <strong>10</strong></span></p>
 <p><label for="reload">Reload:</label> <input type="checkbox" name="reload" id="reload"><span class="example">Check this box to reload the tab each time it is shown.</p>
+<p><label for="auto_start">Cycle at Startup:</label> <input type="checkbox" name="auto_start" id="auto_start"><span class="example">Check this box to start cycling tabs automatically when Chrome starts.</p>
 <button onclick="save_options()">Save</button>
 <div id="status"></div>
 </div>
